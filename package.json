@@ -1,0 +1,15 @@
+{
+  "name": "@relay/bulk-import",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"You are doing great.\""
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "glob": "^10.3.3"
+  }
+}
