@@ -1,27 +1,35 @@
-import { dirname, join } from 'path';
+import { dirname, join, relative as makeRelative } from 'path';
 import { glob } from 'glob';
 import { fileURLToPath } from 'url';
+import Promise from 'bluebird';
+import _ from 'lodash';
 
 
 export default async function (meta, ...globPaths) {
+	const returnVal = {};
 	const __dirname = dirname(fileURLToPath(meta.url));
 
 	const paths = await Promise.resolve(globPaths.flat())
 		.map(path => {
 			const fullPath = join(__dirname, path);
-			console.log(`globbing "${fullPath}"`);
 			return glob(fullPath);
 		})
 		.then(lst => lst.flat());
 
 	while (paths.length) {
 		const path = paths.shift();
+		const relativePath = makeRelative(__dirname, path);
+		const relativePathParts = relativePath.split('/');
 
-		await import(path)
+		const module = await import(path)
 			.catch(err => {
 				console.error(`failed to load "${path}"`);
 				console.error(err);
 				throw err;
 			});
+
+		_.set(returnVal, relativePathParts, module);
 	}
+
+	return returnVal;
 }
