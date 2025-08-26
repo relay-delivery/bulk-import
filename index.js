@@ -25,7 +25,7 @@ export default async function (meta, ...globPaths) {
 			.catch(err => {
 				console.error(`failed to load "${path}"`);
 				console.error(err);
-				throw err;
+				process.exit(1);
 			});
 
 		_.set(returnVal, relativePathParts, module);
